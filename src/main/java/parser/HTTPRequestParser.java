@@ -6,28 +6,21 @@ import webserver.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class HTTPRequestParser {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    static public void parseRequestHeaders(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        String line = br.readLine();
-        log.debug("request line = {}", line);
-
-        while (!line.equals("")) {
-            line = br.readLine();
-            log.debug("header = {}", line);
-        }
+    public static String getRequestURL(String line) {
+        String[] token = line.split(" ");
+        String path = token[1];
+        log.debug("request path={}", path);
+        return path;
     }
 
-    public static String getRequestURL(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        String line = br.readLine();
-        log.debug("request line = {}", line);
-        String[] tokens = line.split(" ");
-        return tokens[1];
+    public static void parseRequestHeaders(String line, BufferedReader br) throws IOException {
+        while (!line.equals("") && !line.equals(null)) {
+            log.debug("requestHeader={}", line);
+            line = br.readLine();
+        }
     }
 }
