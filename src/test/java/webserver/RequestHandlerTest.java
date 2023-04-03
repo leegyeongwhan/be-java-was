@@ -14,17 +14,14 @@ class RequestHandlerTest {
     @Test
     @DisplayName("파서가 잘 동작하는지 Test")
     void parseRequestHeadersTest() throws IOException {
-        byte[] testData = "GET /index.html HTTP/1.1 Host: localhost:8080 Connection: keep-alive".getBytes();
-        InputStream in = new ByteArrayInputStream(testData);
-        HTTPRequestParser.parseRequestHeaders(in);
+        String line = "GET /index.html HTTP/1.1 Host: localhost:8080 Connection: keep-alive";
     }
 
     @Test
     @DisplayName("index.html을 잘반납하는지 test")
     void getRequestURLTest() throws IOException {
-        byte[] testData = "GET /index.html HTTP/1.1 Host: localhost:8080 Connection: keep-alive".getBytes();
-        InputStream in = new ByteArrayInputStream(testData);
-        String url = HTTPRequestParser.getRequestURL(in);
+        String line = "GET /index.html HTTP/1.1 Host: localhost:8080 Connection: keep-alive";
+        String url = HTTPRequestParser.getRequestURL(line);
         Assertions.assertEquals(url, "/index.html");
     }
 }
