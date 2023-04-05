@@ -30,7 +30,7 @@ public class HttpRequest {
             if (line == null) {
                 return;
             }
-            log.debug("line : {}", line);
+           // log.debug("line : {}", line);
             readRequest(line);
         }
     }
@@ -62,6 +62,8 @@ public class HttpRequest {
 
             User user = User.createUser(queryString);
             log.debug("user : {}", user);
+            log.debug("url : {}", this.url);
+            return;
         }
         log.debug("url : {}", url);
         this.url = url;
