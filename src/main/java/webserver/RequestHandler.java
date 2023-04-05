@@ -1,14 +1,14 @@
+
 package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static parser.HTTPRequestParser.*;
+import request.HttpRequest;
+import response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -19,30 +19,31 @@ public class RequestHandler implements Runnable {
         this.connection = connectionSocket;
     }
 
+    @Override
     public void run() {
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다. 구현로직만 있는 유틸성 클래스를 구현한다.
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String line = br.readLine();
-            if (line == null) {
-                return;
-            }
 
-            String url = getRequestURL(line);
-            parseRequestHeaders(line, br);
+            HttpRequest httpRequest = new HttpRequest(in);
+            HttpResponse httpResponse = new HttpResponse();
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
-
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            getView(out, httpRequest.getUrl());
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
+
+
+    private void getView(OutputStream out, String url) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
+        response200Header(dos, body.length);
+        responseBody(dos, body);
+    }
+
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
@@ -64,3 +65,4 @@ public class RequestHandler implements Runnable {
         }
     }
 }
+
