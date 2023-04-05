@@ -1,5 +1,9 @@
 package model;
 
+import util.HttpRequestUtils;
+
+import java.util.Map;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +15,14 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    //TODO static을 지우자
+    public static User createUser(String httpRequest) {
+        String queryString = httpRequest.substring(httpRequest.indexOf("?") + 1);
+        Map<String, String> params = HttpRequestUtils.parseQueryString(queryString);
+        User user = new User(params.get("userId"), params.get("password"), params.get("name"), params.get("email"));
+        return user;
     }
 
     public String getUserId() {
