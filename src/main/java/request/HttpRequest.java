@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 
 public class HttpRequest {
@@ -20,7 +21,7 @@ public class HttpRequest {
     private String method;
     private String url;
 
-    private String requestHeader;
+    private Map<String, String> requestHeader;
     private String requestBody;
 
     public HttpRequest(InputStream in) throws IOException {
@@ -30,7 +31,7 @@ public class HttpRequest {
             if (line == null) {
                 return;
             }
-           // log.debug("line : {}", line);
+            // log.debug("line : {}", line);
             readRequest(line);
         }
     }
@@ -38,20 +39,26 @@ public class HttpRequest {
     private void readRequest(String readLine) {
         //TODO startLine, header ,body 으로 구분한다.
         //http 메서드로 구분
-        if (readLine.startsWith("GET")) {
+        if (readLine.startsWith("GET") || readLine.startsWith("POST")) {
             readStartLine(readLine);
         }
         //TODO Header 부분을 분리한다.
+        if (readLine.contains(":")) {
+            readHeaderLine(readLine);
+        }
         //TODO Body 부분을 분리한다.
     }
 
     private void readHeaderLine(String readLine) {
+        //TODO header부분을 파싱한다.
+        //requestHeader.put(headerName, value);
     }
 
     private void readStartLine(String readLine) {
         String[] tokens = readLine.split(" ");
         this.method = tokens[0];
         String url = tokens[1];
+        log.debug("readStartLine  method : {}", method);
 
         if (url.startsWith("/user/create?")) {
             this.url = url.split("\\?")[0];
@@ -65,7 +72,7 @@ public class HttpRequest {
             log.debug("url : {}", this.url);
             return;
         }
-        log.debug("url : {}", url);
+        log.debug("readStartLine url : {}", url);
         this.url = url;
     }
 
