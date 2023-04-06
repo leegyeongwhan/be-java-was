@@ -1,18 +1,18 @@
 package controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import request.HttpRequest;
 import response.HttpResponse;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import webserver.RequestHandler;
 
 public abstract class FrontController implements Controller {
+    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
         String method = request.getMethod();
-
+        log.debug("FrontController method : {}", request.getMethod());
         if (method.equals("GET")) {
             doGet(request, response);
         } else if (method.equals("POST")) {
@@ -21,19 +21,8 @@ public abstract class FrontController implements Controller {
     }
 
     protected void doGet(HttpRequest request, HttpResponse response) {
-        try {
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + request.getUrl()).toPath());
-            response.response200Header(body.length);
-            response.responseBody(body);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected void doPost(HttpRequest request, HttpResponse response) {
-        if (request.getUrl().startsWith("redirect:")) {
-            String url = request.getUrl().split("redirect:")[1];
-            response.response302Header(url);
-        }
     }
 }
