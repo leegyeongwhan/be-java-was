@@ -16,11 +16,14 @@ public class HomeController extends FrontController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         try {
+            log.debug("HomeController request : {}", request.getUrl());
+            byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
+            log.debug("HomeController + request.getUrl()).toPath() : {} ", request.getTypeDirectory() + request.getUrl());
+
+            response.response200Header(body.length, request.getContentTypeHeader());
+            response.responseBody(body);
             log.debug("HomeController request : {}", request);
             log.debug("HomeController response : {}", response);
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + request.getUrl()).toPath());
-            response.response200Header(body.length);
-            response.responseBody(body);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
