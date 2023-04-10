@@ -6,8 +6,9 @@ public enum ContentType {
     JS("application/javascript", ".js", "/static"),
     CSS("text/css;charset=utf-8", ".css", "/static"),
     FONT("font/woff", ".woff", "/static"),
-    HTML("text/html;charset=utf-8", ".html", "/templates");
-
+    HTML("text/html;charset=utf-8", ".html", "/templates"),
+    PNG("image/png", ".png", "/static"),
+    ICO("image/avif", ".ico", "/templates");
 
     private String contentTypeHeader;
     private String extension;

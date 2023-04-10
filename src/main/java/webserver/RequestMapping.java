@@ -15,7 +15,6 @@ public class RequestMapping {
         controllerMap.put("/index.html", new HomeController());
         controllerMap.put("/user/form.html", new UserController());
         controllerMap.put("/user/create", new UserController());
-        controllerMap.put("/favicon.ico", new ResourceController());
     }
 
     public Controller mapping(String url) {
