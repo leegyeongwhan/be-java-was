@@ -32,10 +32,10 @@ public class RequestHandler implements Runnable {
 
             //TODO HttpResponse로 out을 받는것 이 맞을까?
             HttpResponse httpResponse = new HttpResponse(out);
-            //static한 경로들은 따로 핸들링하고  get css/머시꺵이/
+
             //log.debug("Http static URL {}", httpRequest.getStaticUrl());
             //TODO 스프링에서는 requestMapping을 통해 맞는 컨트롤러 메서드를 실행해준다 requestMapping을 구현해본다.
-            //ToDO 현재 HttpRequest에서 url을 정한다 redirect나 "/" 같은 상황에 대처하며 경로를 편하게 하기위해 requestMapping을 구현한다.\
+            //ToDO 현재 HttpRequest에서 url을 정한다 redirect나 "/" 같은 상황에 대처하며 경로를 편하게 하기위해 requestMapping을 구현한다
 
            // log.debug("httpRequest : {}", httpRequest.toString());
             Controller controller = requestMapping.mapping(httpRequest.getUrl());
@@ -47,8 +47,5 @@ public class RequestHandler implements Runnable {
             log.error(e.getMessage());
         }
     }
-
-    //TODO css/bootstrap.min.css   /css/styles.css /js/jquery-2.2.0.min.js  /js/scripts.js  /js/bootstrap.min.js  /favicon.ico
-    // 다음과 같은 정적 파일들은 따로 랜더링 한다.
 }
 
