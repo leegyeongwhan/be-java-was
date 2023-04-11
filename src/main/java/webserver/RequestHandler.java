@@ -14,7 +14,6 @@ public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
     private Socket connection;
     private RequestMapping requestMapping = new RequestMapping();
-    //rivate handleStaticResource staticResource = new handleStaticResource();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -35,11 +34,13 @@ public class RequestHandler implements Runnable {
 
             // log.debug("httpRequest : {}", httpRequest.toString());
             Controller controller = requestMapping.mapping(httpRequest.getUrl());
-            if (controller != null) {
-                log.debug("controller : {}", controller);
-                controller.service(httpRequest, httpResponse);
+            if (controller == null) {
                 httpResponse.setStatus(HttpStatus.SC_NOT_FOUND);
+                return;
             }
+
+            log.debug("controller : {}", controller);
+            controller.service(httpRequest, httpResponse);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
