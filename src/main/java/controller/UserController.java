@@ -36,13 +36,19 @@ public class UserController extends FrontController {
         response.sendRedirect("/index.html");
     }
 
+    /**
+     * userForm
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         try {
             //log.debug("UserController doPost : {}", request, response);
             byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
             //       log.debug("UserController + request.getUrl()).toPath() {} :", request.getTypeDirectory() + request.getUrl());
-
             response.response200Header(body.length, request.getContentTypeHeader());
             response.responseBody(body);
         } catch (IOException e) {
