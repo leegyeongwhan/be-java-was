@@ -19,6 +19,7 @@ public class HomeController extends FrontController {
             log.debug("HomeController request : {}", request.getUrl());
             byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
             log.debug("HomeController + request.getUrl()).toPath() : {} ", request.getTypeDirectory() + request.getUrl());
+            log.debug("HomeController  request.getContentTypeHeader()) : {} ",  request.getContentTypeHeader());
 
             response.response200Header(body.length, request.getContentTypeHeader());
             response.responseBody(body);

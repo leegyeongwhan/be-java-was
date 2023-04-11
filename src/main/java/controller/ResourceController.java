@@ -21,6 +21,7 @@ public class ResourceController extends FrontController {
             log.debug("ResourceController request.getUrl() : {}", request.getUrl());
             byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
             log.debug("ResourceController + request.getUrl()).toPath() {} :", request.getTypeDirectory() + request.getUrl());
+            log.debug("ResourceController  request.getContentTypeHeader()) : {} ",  request.getContentTypeHeader());
 
             response.response200Header(body.length, request.getContentTypeHeader());
             response.responseBody(body);
