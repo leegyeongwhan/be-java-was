@@ -13,7 +13,7 @@ public class HttpResponse {
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
     private DataOutputStream dos;
     //TODO 사용해보자.
-//    private HttpStatus httpStatus;
+    private HttpStatus httpStatus;
 //    private String contentType;
 //    private byte[] responseBody;
 
@@ -70,5 +70,17 @@ public class HttpResponse {
             log.error(e.getMessage());
         }
         return this;
+    }
+
+    public HttpStatus getStatus() {
+        return httpStatus;
+    }
+
+    public void setStatus(HttpStatus httpStatus) {
+        this.httpStatus = httpStatus;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 }

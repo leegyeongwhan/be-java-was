@@ -4,18 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import request.HttpRequest;
 import response.HttpResponse;
+import util.HttpMethod;
 import webserver.RequestHandler;
+
+import static util.HttpMethod.*;
 
 public abstract class FrontController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        String method = request.getMethod();
+        HttpMethod method = request.getMethod();
         log.debug("FrontController method : {}", request.getMethod());
-        if (method.equals("GET")) {
+        if (method.equals(GET)) {
             doGet(request, response);
-        } else if (method.equals("POST")) {
+        } else if (method.equals(POST)) {
             doPost(request, response);
         }
     }

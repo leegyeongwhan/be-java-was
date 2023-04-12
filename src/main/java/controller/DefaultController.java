@@ -16,8 +16,8 @@ public class DefaultController extends FrontController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         try {
-            byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
             log.debug("DefaultController + request.getUrl()).toPath() : {} ", request.getTypeDirectory() + request.getUrl());
+            byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
             response.response200Header(body.length, request.getContentTypeHeader());
             log.debug("DefaultController + request.getContentTypeHeader() : {} ", request.getContentTypeHeader());
             response.responseBody(body);

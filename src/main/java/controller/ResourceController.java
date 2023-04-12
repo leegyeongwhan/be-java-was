@@ -17,10 +17,11 @@ public class ResourceController extends FrontController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         try {
-            //         log.debug("ResourceController request : {}", request);
+            //log.debug("UserController doPost : {}", request, response);
             log.debug("ResourceController request.getUrl() : {}", request.getUrl());
             byte[] body = Files.readAllBytes(new File(request.getTypeDirectory() + request.getUrl()).toPath());
             log.debug("ResourceController + request.getUrl()).toPath() {} :", request.getTypeDirectory() + request.getUrl());
+            log.debug("ResourceController  request.getContentTypeHeader()) : {} ",  request.getContentTypeHeader());
 
             response.response200Header(body.length, request.getContentTypeHeader());
             response.responseBody(body);
