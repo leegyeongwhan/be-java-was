@@ -1,5 +1,6 @@
-package response;
+package http.response;
 
+import cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,5 +83,16 @@ public class HttpResponse {
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
+    }
+
+    public void addCookie(Cookie mySessionCookie) {
+    }
+
+    @Override
+    public String toString() {
+        return "HttpResponse{" +
+                "dos=" + dos +
+                ", httpStatus=" + httpStatus +
+                '}';
     }
 }

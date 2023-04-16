@@ -1,7 +1,9 @@
-package request;
+package http.request;
 
+import cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import session.Session;
 import util.HttpMethod;
 import webserver.RequestHandler;
 
@@ -16,6 +18,7 @@ public class HttpRequest {
     private HttpRequestHeader httpRequestHeader;
     //body
     private HttpRequestBody httpRequestBody;
+    private Cookie cookie;
 
     //TODO 정적 팩토리 메서드(Static Factory Method)
     public static HttpRequest of(InputStream in) throws IOException {
@@ -28,7 +31,7 @@ public class HttpRequest {
         return new HttpRequest(requestLine, requestHeader, requestBody);
     }
 
-    public HttpRequest(HttpRequestStartLine httpRequestStartLine, HttpRequestHeader httpRequestHeader, HttpRequestBody httpRequestBody) {
+    private HttpRequest(HttpRequestStartLine httpRequestStartLine, HttpRequestHeader httpRequestHeader, HttpRequestBody httpRequestBody) {
         this.httpRequestStartLine = httpRequestStartLine;
         this.httpRequestHeader = httpRequestHeader;
         this.httpRequestBody = httpRequestBody;
@@ -58,7 +61,25 @@ public class HttpRequest {
         return getHttpRequestHeader().getContentType().getContentTypeHeader();
     }
 
+    public String getContentTypePath() {
+        return getHttpRequestHeader().getContentType().getTypePath();
+    }
+
     public HttpMethod getMethod() {
         return httpRequestStartLine.getMethod();
+    }
+
+    public Session getHttpSession() {
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "HttpRequest{" +
+                "httpRequestStartLine=" + httpRequestStartLine +
+                ", httpRequestHeader=" + httpRequestHeader +
+                ", httpRequestBody=" + httpRequestBody +
+                ", cookie=" + cookie +
+                '}';
     }
 }
