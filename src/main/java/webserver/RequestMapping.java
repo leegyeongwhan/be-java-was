@@ -15,8 +15,8 @@ public class RequestMapping {
     private static final ConcurrentHashMap<String, Controller> controllerMap = new ConcurrentHashMap<>();
 
     public RequestMapping() {
-        controllerMap.put("/index.html", new HomeController());
-        controllerMap.put("/user/form.html", new UserController());
+        controllerMap.put("/", new HomeController());
+        controllerMap.put("/user/form", new UserController());
         controllerMap.put("/user/create", new UserController());
     }
 
