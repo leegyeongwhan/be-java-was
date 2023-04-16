@@ -24,24 +24,26 @@ public class DispatchServlet implements MyServlet {
         log.debug("request.getContentTypePath() : {}", request.getContentTypePath());
 
         Controller controller = requestMapping.mapping(request.getUrl());
+        log.debug("controller : {}", controller);
+
         if (controller instanceof DefaultController) {
             DefaultController defaultController = (DefaultController) controller;
-            log.debug("Request.getTypeDirectory() : {}", request.getContentTypePath());
             defaultController.doGet(request, response);
             return;
         }
 
         //TODO 컨트롤러의 상위 단인 controller를 통해
-        log.debug("request.getMethod(): {}", request.getMethod());
-        log.debug("request.getUrl(): {}", request.getUrl());
         try {
+            log.debug("request.getMethod(): {}", request.getMethod());
             MappedRequest mappedRequest = new MappedRequest(request.getMethod(), request.getUrl());
             log.debug("mappedRequest: {}", mappedRequest);
             Method controllerMethod = RequestMapper.get(mappedRequest);
-            String view = (String) controllerMethod.invoke(controller);
-            MyView myView = new MyView(view);
-            myView.render(request, response);
+            log.debug("controllerMethod: {}", controllerMethod);
+            //     String view = (String) controllerMethod.invoke(controller);
+            String view = (String) controllerMethod.invoke(controller, request, response);
+            MyView myView = new MyView(view, request);
             log.debug("view: {}", view);
+            myView.viewResolver(request, response);
 
         } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex);
