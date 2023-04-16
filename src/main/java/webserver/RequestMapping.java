@@ -1,6 +1,9 @@
 package webserver;
 
-import controller.*;
+import application.controller.Controller;
+import application.controller.DefaultController;
+import application.controller.HomeController;
+import application.controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
