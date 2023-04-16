@@ -1,6 +1,8 @@
 package application.controller;
 
 
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 import webserver.annotation.Controller;
 import webserver.annotation.RequestMapping;
 import org.slf4j.Logger;
@@ -18,8 +20,8 @@ public class HomeController extends FrontController {
 //        return new ModelAndView();
 //    }
 
-    @RequestMapping(path = "/index.html", method = HttpMethod.GET)
-    public String home() {
+    @RequestMapping(path = "/", method = HttpMethod.GET)
+    public String home(HttpRequest request, HttpResponse response) {
         return "/index.html";
     }
 }
