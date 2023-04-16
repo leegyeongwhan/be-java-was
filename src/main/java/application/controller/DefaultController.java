@@ -1,9 +1,9 @@
-package controller;
+package application.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.HttpRequest;
-import response.HttpResponse;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 import webserver.RequestHandler;
 
 import java.io.File;
@@ -13,7 +13,6 @@ import java.nio.file.Files;
 public class DefaultController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         try {
             log.debug("DefaultController + request.getUrl()).toPath() : {} ", request.getTypeDirectory() + request.getUrl());
