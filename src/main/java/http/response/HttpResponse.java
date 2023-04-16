@@ -3,10 +3,10 @@ package http.response;
 import cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.MyView;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 
 public class HttpResponse {
@@ -15,11 +15,13 @@ public class HttpResponse {
     private DataOutputStream dos;
     //TODO 사용해보자.
     private HttpStatus httpStatus;
-//    private String contentType;
-//    private byte[] responseBody;
+    private String version;
+    private MyView view;
+    private HttpResponseHeader httpResponseHeader;
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
+        this.httpResponseHeader = new HttpResponseHeader();
     }
 
     public void sendRedirect(String url) {
@@ -54,7 +56,7 @@ public class HttpResponse {
             log.debug("Content-Lengthe: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: " + contentType + "\r\n");
-            dos.writeBytes("esponse200Header defalut Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("response200Header defalut Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -77,9 +79,6 @@ public class HttpResponse {
         return httpStatus;
     }
 
-    public void setStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-    }
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
@@ -94,5 +93,44 @@ public class HttpResponse {
                 "dos=" + dos +
                 ", httpStatus=" + httpStatus +
                 '}';
+    }
+
+    public void render() throws IOException {
+        byte[] body = Files.readAllBytes(new File(view.getRequest().getTypeDirectory() + view.getViewPath()).toPath());
+        response200Header(body.length, view.getRequest().getContentTypeHeader());
+//        if (view.validBody()) {
+//            log.debug("view.getViewPath()).toPath(): " + view.getViewPath());
+//            responseBody(body);
+//        }
+        responseBody(body);
+    }
+
+    private void setContentLength(int length) {
+        httpResponseHeader.put("Content-Length", String.valueOf(length));
+    }
+
+    private byte[] getResponseHeader() {
+        String headLine = version + " " + getHttpStatus().getCode() + " " + getStatus().getMessage();
+        return (headLine + "\r\n" + httpResponseHeader).getBytes();
+    }
+
+    public HttpResponse setHttpVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
+    public HttpResponse setStatus(HttpStatus status) {
+        this.httpStatus = status;
+        return this;
+    }
+
+    public HttpResponse setView(MyView view) {
+        this.view = view;
+        return this;
+    }
+
+    public HttpResponse addHeader(String key, String value) {
+        this.httpResponseHeader.put(key, value);
+        return this;
     }
 }
