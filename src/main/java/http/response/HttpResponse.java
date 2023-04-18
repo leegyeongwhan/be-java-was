@@ -25,30 +25,6 @@ public class HttpResponse {
         this.httpResponseHeader = new HttpResponseHeader();
     }
 
-
-    public HttpResponse response302Header(String url) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + url + "\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-        return this;
-    }
-
-
-    public HttpResponse response200Header(int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + "text/html;charset=utf-8" + "\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-        return this;
-    }
-
     public HttpResponse response200Header(int lengthOfBodyContent, String contentType) {
         try {
             log.debug("Content-Type: " + contentType + "\r\n");
@@ -83,13 +59,6 @@ public class HttpResponse {
         }
     }
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
-
-    public void addCookie(String name, String value) {
-        this.httpResponseHeader.addCookie(name, value);
-    }
 
     public void addSessionCookie(Cookie mySessionCookie) {
         httpResponseHeader.addMySessionCookie(mySessionCookie);
@@ -153,10 +122,6 @@ public class HttpResponse {
 //                    entry.getKey() + ": " + entry.getValue() + System.lineSeparator());
 //        }
 //        return this;
-    }
-
-    private void setContentLength(int length) {
-        httpResponseHeader.put("Content-Length", String.valueOf(length));
     }
 
     public HttpResponse setHttpVersion(String version) {
