@@ -14,8 +14,8 @@ public class RequestMapping {
     public RequestMapping() {
         controllerMap.put("/", new HomeController());
         controllerMap.put("/user/form", new UserController());
-        controllerMap.put("/user/create", new UserController());
-        controllerMap.put("/user/login", new LoginController());
+        controllerMap.put("/users/create", new UserController());
+        controllerMap.put("/users/login", new LoginController());
     }
 
     public Controller mapping(String url) {
