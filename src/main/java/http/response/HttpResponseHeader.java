@@ -31,5 +31,15 @@ public class HttpResponseHeader {
     //로그인 성공하면 세션메니저를 통해 리스폰스 헤더에 마이쿠키세션을 추가한다.
     public void addMySessionCookie(Cookie mySessionCookie) {
         this.cookies = mySessionCookie;
+        headers.put(cookies.getKey(), cookies.getValue());
+    }
+
+    public boolean getContentLength() {
+        return headers.entrySet().stream()
+                .anyMatch(entry -> entry.getKey().equalsIgnoreCase("Content-Length"));
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 }
