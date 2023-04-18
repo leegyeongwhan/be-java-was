@@ -1,43 +1,44 @@
 package cookie;
 
-import session.Session;
-
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Cookie {
-    private final Map<String, String> cookies;
-    private Session session;
+    private static final String SESSION_ID = "sid";
+    private static final String EQUAL = "=";
+    private static final String SEMICOLON = ";";
+    private static final String BLANK = " ";
 
-    public Cookie(String sessionCookieName, String sessionId) {
-        this.cookies = new LinkedHashMap<>();
+    private final String key;
+    private final String value;
+    private Map<String, String> cookies = new HashMap<>();
+
+    public Cookie(String key, String value) {
+        this.key = key;
+        this.value = value;
+        this.cookies.put(key, value);
     }
 
-    public static Cookie newInstance() {
-        return new Cookie("", "");
-    }
-
-    public void add(String key, String value) {
-        cookies.put(key, value);
-    }
-
-    public void addAttribute(String key, String addValue) {
-        cookies.put(key, cookies.get(key) + "; " + addValue);
+    public void addCookie(String name, String value) {
+        this.cookies.put(name, value);
     }
 
     public void setHttpOnly(String key) {
-        cookies.put(key, cookies.get(key) + "; " + "HttpOnly");
+        cookies.put(key, cookies.get(key) + SEMICOLON + "httpOnly");
     }
 
-    public String create() {
-        return cookies.entrySet().stream()
-                .map(e -> e.getKey() + "=" + e.getValue())
-                .collect(Collectors.joining("\r\n"));
+    public boolean isEmpty() {
+        return cookies.isEmpty();
     }
 
-    public String get(String key) {
-        String value = cookies.get(key);
-        return value != null ? value : "";
+    public String parse() {
+        return this.cookies.entrySet().stream()
+                .map(key -> key.getKey() + EQUAL + key.getValue())
+                .collect(Collectors.joining(SEMICOLON + BLANK));
+    }
+
+    public String getSessionId() {
+        return cookies.get(SESSION_ID);
     }
 }
