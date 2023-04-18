@@ -19,6 +19,7 @@ public class HttpResponse {
     private String version;
     private MyView view;
     private HttpResponseHeader httpResponseHeader;
+
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
         this.httpResponseHeader = new HttpResponseHeader();
@@ -98,8 +99,8 @@ public class HttpResponse {
         if (this.httpResponseHeader.isEmptyCookie()) {
             return;
         }
-        this.httpResponseHeader.addCookie(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
         String parseCookie = this.httpResponseHeader.parseCookie();
+        this.httpResponseHeader.addCookie(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
         addHeader("Set-Cookie", parseCookie);
         log.debug("addCookieHeader : {}", parseCookie);
         log.debug("httpResponseHeader : {}", httpResponseHeader);
@@ -110,6 +111,7 @@ public class HttpResponse {
         try {
             dos.writeBytes("HTTP/1.1 " + this.httpStatus.getCode() + this.httpStatus.getMessage() + " \r\n");
             dos.writeBytes(responseReadHeaderLine());
+            //Set-cookie: sid=f50ed4f1-c07c-4a6d-b2d6-9d25f2aec460; Path=/
 //            if (this.body != null) {
 //                dos.write(this.body, 0, body.length);
 //            }
