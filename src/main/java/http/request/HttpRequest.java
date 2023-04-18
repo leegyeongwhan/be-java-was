@@ -3,7 +3,6 @@ package http.request;
 import cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import session.Session;
 import util.HttpMethod;
 import webserver.RequestHandler;
 
@@ -67,10 +66,6 @@ public class HttpRequest {
 
     public HttpMethod getMethod() {
         return httpRequestStartLine.getMethod();
-    }
-
-    public Session getHttpSession() {
-        return null;
     }
 
     @Override
