@@ -18,7 +18,7 @@ import java.util.Map;
 public class LoginController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    @RequestMapping(path = "/user/login", method = HttpMethod.POST)
+    @RequestMapping(path = "/users/login", method = HttpMethod.POST)
     public String login(HttpRequest request
             , HttpResponse response) {
         Map<String, String> parameters = request.getHttpRequestBody().getBody();
@@ -30,8 +30,9 @@ public class LoginController extends FrontController {
         User user = Database.findUserById(userId);
         if (user.validUser(userId, password)) {
             SessionManager.createSession(user, response);
+            response.addCookieHeader();
             log.debug("user", user);
-            return "redirect:/";
+            return "redirect:/index.html";
         }
         return "/user/login_failed.html";
     }
