@@ -1,7 +1,9 @@
 package session;
 
+import application.model.User;
 import cookie.Cookie;
 import http.response.HttpResponse;
+import javassist.compiler.ast.Member;
 
 import java.util.Map;
 import java.util.UUID;
@@ -9,22 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionManager {
     private static final Map<String, Object> sessionStore = new ConcurrentHashMap<>();
-    private final String id;
+    public static final String SESSION_COOKIE_NAME = "sid";
 
-    public SessionManager() {
-        this.id = UUID.randomUUID().toString();
-    }
-
-    public void createSession(Object value, HttpResponse response) {
+    public static void createSession(User user, HttpResponse response) {
         String sessionId = UUID.randomUUID().toString();
-        sessionStore.put(sessionId, value);
+        sessionStore.put(sessionId, user);
 
-        Cookie mySessionCookie = new Cookie("SESSION_COOKIE_NAME", sessionId);
-        response.addCookie(mySessionCookie);
-    }
-
-    public String getId() {
-        return this.id;
+        Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
+        response.addSessionCookie(mySessionCookie);
     }
 
     public Object getAttribute(final String name) {
