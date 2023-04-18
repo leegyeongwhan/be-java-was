@@ -1,7 +1,6 @@
 package http.response;
 
 import cookie.Cookie;
-import http.request.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import view.MyView;
@@ -22,7 +21,7 @@ public class HttpResponse {
     private MyView view;
     private HttpResponseHeader httpResponseHeader;
 
-    public HttpResponse(OutputStream out, HttpRequest request) {
+    public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
         this.httpResponseHeader = new HttpResponseHeader();
     }
@@ -88,18 +87,16 @@ public class HttpResponse {
         return httpStatus;
     }
 
-    public void addSessionCookie(Cookie mySessionCookie) {
-        httpResponseHeader.addMySessionCookie(mySessionCookie);
-    }
-
     public void addCookie(String name, String value) {
         this.httpResponseHeader.addCookie(name, value);
     }
 
+    public void addSessionCookie(Cookie mySessionCookie) {
+        httpResponseHeader.addMySessionCookie(mySessionCookie);
+    }
+
     private void addCookieHeader() {
-        if (this.httpResponseHeader.isEmptyCookie()) {
-            return;
-        }
+        if (this.httpResponseHeader.isEmptyCookie()) {return;}
 
         this.httpResponseHeader.addCookie(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
         String parseCookie = this.httpResponseHeader.parseCookie();
