@@ -1,9 +1,6 @@
 package webserver;
 
-import application.controller.Controller;
-import application.controller.DefaultController;
-import application.controller.HomeController;
-import application.controller.UserController;
+import application.controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +15,7 @@ public class RequestMapping {
         controllerMap.put("/", new HomeController());
         controllerMap.put("/user/form", new UserController());
         controllerMap.put("/user/create", new UserController());
+        controllerMap.put("/user/login", new LoginController());
     }
 
     public Controller mapping(String url) {
