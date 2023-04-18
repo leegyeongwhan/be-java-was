@@ -41,4 +41,12 @@ public class Cookie {
     public String getSessionId() {
         return cookies.get(SESSION_ID);
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
