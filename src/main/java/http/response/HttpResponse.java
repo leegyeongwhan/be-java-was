@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import view.MyView;
 
 import java.io.*;
-import java.nio.file.Files;
 
 public class HttpResponse {
     private static final String COOKIE_NAME_PATH = "Path";
@@ -20,16 +19,11 @@ public class HttpResponse {
     private String version;
     private MyView view;
     private HttpResponseHeader httpResponseHeader;
-
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
         this.httpResponseHeader = new HttpResponseHeader();
     }
 
-    public void sendRedirect(String url) {
-        addCookieHeader();
-        response302Header(url);
-    }
 
     public HttpResponse response302Header(String url) {
         try {
@@ -40,6 +34,7 @@ public class HttpResponse {
         }
         return this;
     }
+
 
     public HttpResponse response200Header(int lengthOfBodyContent) {
         try {
@@ -78,10 +73,14 @@ public class HttpResponse {
         return this;
     }
 
-    public HttpStatus getStatus() {
-        return httpStatus;
+    private void response(byte[] body) {
+        try {
+            dos.write(body, 0, body.length);
+            dos.writeBytes("\r\n");
+            dos.flush();
+        } catch (IOException e) {
+        }
     }
-
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
@@ -95,38 +94,67 @@ public class HttpResponse {
         httpResponseHeader.addMySessionCookie(mySessionCookie);
     }
 
-    private void addCookieHeader() {
-        if (this.httpResponseHeader.isEmptyCookie()) {return;}
-
+    public void addCookieHeader() {
+        if (this.httpResponseHeader.isEmptyCookie()) {
+            return;
+        }
         this.httpResponseHeader.addCookie(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
         String parseCookie = this.httpResponseHeader.parseCookie();
-        log.debug("addCookieHeader : {}", parseCookie);
         addHeader("Set-Cookie", parseCookie);
+        log.debug("addCookieHeader : {}", parseCookie);
+        log.debug("httpResponseHeader : {}", httpResponseHeader);
     }
 
-    @Override
-    public String toString() {
-        return "HttpResponse{" +
-                "dos=" + dos +
-                ", httpStatus=" + httpStatus +
-                '}';
+    //200
+    public void render() {
+        try {
+            dos.writeBytes("HTTP/1.1 " + this.httpStatus.getCode() + this.httpStatus.getMessage() + " \r\n");
+            dos.writeBytes(responseReadHeaderLine());
+//            if (this.body != null) {
+//                dos.write(this.body, 0, body.length);
+//            }
+            dos.flush();
+        } catch (IOException e) {
+            e.getMessage();
+        }
+
+//        responseReadStatusLine();
+//        responseReadHeaderLine();
+//        if (hasResponseBody()) {
+//            byte[] body = Files.readAllBytes(new File(view.getRequest().getTypeDirectory() + view.getViewPath()).toPath());
+//            responseBody(body);
+//        }
     }
 
-    public void render() throws IOException {
-        byte[] body = Files.readAllBytes(new File(view.getRequest().getTypeDirectory() + view.getViewPath()).toPath());
-        // getResponseHeader();
-        response200Header(body.length, view.getRequest().getContentTypeHeader());
-        addCookieHeader();
-        responseBody(body);
+    private void response(DataOutputStream dos, byte[] body) {
+        try {
+            dos.write(body, 0, body.length);
+            dos.flush();
+        } catch (IOException e) {
+        }
+    }
+
+    private boolean hasResponseBody() {
+        return httpResponseHeader.getContentLength();
+    }
+
+    private String responseReadHeaderLine() throws IOException {
+        StringBuffer headerString = new StringBuffer();
+        httpResponseHeader.getHeaders().entrySet().stream()
+                .forEach(e -> headerString.append(e.getKey()).append(": ").append(e.getValue())
+                        .append("\r\n"));
+
+        return headerString.append("\r\n").toString();
+
+//        for (Map.Entry<String, String> entry : httpResponseHeader.getHeaders().entrySet()) {
+//            dos.writeBytes(
+//                    entry.getKey() + ": " + entry.getValue() + System.lineSeparator());
+//        }
+//        return this;
     }
 
     private void setContentLength(int length) {
         httpResponseHeader.put("Content-Length", String.valueOf(length));
-    }
-
-    private byte[] getResponseHeader() {
-        String headLine = version + " " + getHttpStatus().getCode() + " " + getStatus().getMessage();
-        return (headLine + "\r\n" + httpResponseHeader).getBytes();
     }
 
     public HttpResponse setHttpVersion(String version) {
