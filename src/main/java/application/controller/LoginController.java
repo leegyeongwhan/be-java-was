@@ -1,5 +1,9 @@
 package application.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import session.SessionManager;
+import webserver.RequestHandler;
 import webserver.annotation.Controller;
 import webserver.annotation.RequestMapping;
 import application.db.Database;
@@ -11,30 +15,30 @@ import util.HttpMethod;
 import java.util.Map;
 
 @Controller
-public class LoginController{
+public class LoginController extends FrontController {
+    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     @RequestMapping(path = "/user/login", method = HttpMethod.POST)
-    public String login(Map<String, String> parameters, HttpRequest request
+    public String login(HttpRequest request
             , HttpResponse response) {
+        Map<String, String> parameters = request.getHttpRequestBody().getBody();
+        log.debug("userId : {}", parameters.get("userId"));
+        log.debug("password : {}", parameters.get("password"));
+
         String userId = parameters.get("userId");
         String password = parameters.get("password");
-
         User user = Database.findUserById(userId);
-
-        //아이디가 null이면 없는회원
-        if (user == null || !user.getPassword().equals(password)) {
-            return "/user/login_failed.html";
+        if (user.validUser(userId, password)) {
+            SessionManager.createSession(user, response);
+            log.debug("user", user);
+            return "redirect:/";
         }
-
-//        Session session = request.getHttpSession();
-//        session.s(user.getUserId(), user);
-//        HttpSessionStorage.save(httpSession.getId(), httpSession);
-//
-//        httpResponse.addCookie(SESSION_ID, httpRequest.getSessionId());
-//        httpResponse.addCookie(LOGINED, "true");
-
-
-        return "/index.html";
+        return "/user/login_failed.html";
     }
 
+    @RequestMapping(path = "/user/login", method = HttpMethod.GET)
+    public String loginForm(HttpRequest request
+            , HttpResponse response) {
+        return "/user/login.html";
+    }
 }
