@@ -26,21 +26,18 @@ public class UserController extends FrontController {
         return new ModelAndView(REDIRECT + INDEX_HTML);
     }
 
-    @RequestMapping(path = "/user/create", method = HttpMethod.POST)
+    @RequestMapping(path = "/users/create", method = HttpMethod.POST)
     public String createUser(HttpRequest request, HttpResponse response) {
         HttpRequestBody httpRequestBody = request.getHttpRequestBody();
         Map<String, String> parameters = httpRequestBody.getBody();
         log.debug("parameters = {}", parameters);
 
-        String userId = parameters.get("userId");
-        String password = parameters.get("password");
-        String name = parameters.get("name");
-        String email = parameters.get("email");
+        User user = new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"),
+                parameters.get("email"));
 
-        User user = new User(userId, password, name, email);
         log.debug("생성한유저 = {}", user);
         database.addUser(user);
-        return "redirect:/";
+        return "redirect:/index.html";
     }
 
     @RequestMapping(path = "/user/form", method = HttpMethod.GET)

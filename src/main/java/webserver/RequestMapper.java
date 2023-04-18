@@ -73,8 +73,6 @@ public class RequestMapper {
     }
 
     public static Method get(MappedRequest mappedRequest) {
-        log.debug("get", mappedRequest);
-        log.debug(" requestMapper", requestMapper);
         return requestMapper.get(mappedRequest);
     }
 
