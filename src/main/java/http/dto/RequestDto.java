@@ -1,18 +1,18 @@
-package webserver;
+package http.dto;
 
 
 import util.HttpMethod;
 
 import java.util.Objects;
 
-public class MappedRequest {
+public class RequestDto {
     private HttpMethod httpMethod;
     private String path;
 
-    public MappedRequest() {
+    public RequestDto() {
     }
 
-    public MappedRequest(HttpMethod httpMethod, String path) {
+    public RequestDto(HttpMethod httpMethod, String path) {
         this.httpMethod = httpMethod;
         this.path = path;
     }
@@ -23,7 +23,7 @@ public class MappedRequest {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        MappedRequest that = (MappedRequest) o;
+        RequestDto that = (RequestDto) o;
         return httpMethod == that.httpMethod &&
                 Objects.equals(path, that.path);
     }
