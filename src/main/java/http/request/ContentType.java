@@ -10,16 +10,16 @@ public enum ContentType {
     PNG("image/png", "/png", "/static"),
     ICO("image/avif", "/ico", "/templates");
 
-    private String contentTypeHeader;
-    private String extension;
-    private String typePath;
-    private final String CLASS_PATH = "src/main/resources";
+    private final String contentTypeHeader;
+    private final String extension;
+    private final String typePath;
 
     public String getContentTypeHeader() {
         return contentTypeHeader;
     }
 
     public String getTypeDirectory() {
+        String CLASS_PATH = "src/main/resources";
         return CLASS_PATH + typePath;
     }
 

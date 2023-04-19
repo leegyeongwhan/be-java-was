@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import webserver.MappedRequest;
+import http.dto.RequestDto;
 import webserver.RequestHandler;
 import webserver.RequestMapping;
 
@@ -35,22 +35,19 @@ public class DispatchServlet implements MyServlet {
         //TODO 컨트롤러의 상위 단인 controller를 통해
         try {
             log.debug("request.getMethod(): {}", request.getMethod());
-            MappedRequest mappedRequest = new MappedRequest(request.getMethod(), request.getUrl());
-            log.debug("mappedRequest: {}", mappedRequest);
-            Method controllerMethod = RequestMapper.get(mappedRequest);
+            RequestDto requestDto = new RequestDto(request.getMethod(), request.getUrl());
+            log.debug("mappedRequest: {}", requestDto);
+            Method controllerMethod = RequestMapper.get(requestDto);
             log.debug("controllerMethod: {}", controllerMethod);
             //     String view = (String) controllerMethod.invoke(controller);
             String view = (String) controllerMethod.invoke(controller, request, response);
+            System.out.println(view);
             MyView myView = new MyView(view, request);
             log.debug("view: {}", view);
             myView.viewResolver(request, response);
 
-        } catch (InvocationTargetException ex) {
+        } catch (InvocationTargetException | IllegalAccessException | IOException ex) {
             throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -1,5 +1,6 @@
 package webserver;
 
+import http.dto.RequestDto;
 import webserver.annotation.Controller;
 import webserver.annotation.RequestMapping;
 import org.reflections.Reflections;
@@ -13,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class RequestMapper {
-    private static final Map<MappedRequest, Method> requestMapper = new LinkedHashMap<>();
+    private static final Map<RequestDto, Method> requestMapper = new LinkedHashMap<>();
     private static final String DEFAULT_CONTROLLER_DIRECTORY = "application";
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
@@ -58,25 +59,25 @@ public class RequestMapper {
             log.debug("annotatedMethod = {}", annotatedMethod); //usercontroller
             RequestMapping annotation = annotatedMethod.getAnnotation(RequestMapping.class);
             log.debug("annotation = {}", annotation); //usercontroller
-            MappedRequest mappedRequest = new MappedRequest(annotation.method(), annotation.path());
-            log.debug("mappedRequest = {}", mappedRequest); //usercontroller
-            add(mappedRequest, annotatedMethod);
+            RequestDto requestDto = new RequestDto(annotation.method(), annotation.path());
+            log.debug("mappedRequest = {}", requestDto); //usercontroller
+            add(requestDto, annotatedMethod);
         };
     }
 
-    public static void add(MappedRequest mappedRequest, Method method) {
-        if (requestMapper.containsKey(mappedRequest)) {
+    public static void add(RequestDto requestDto, Method method) {
+        if (requestMapper.containsKey(requestDto)) {
             return;
             // throw new RuntimeException("중복되는 Reqeust가 있습니다");
         }
-        requestMapper.put(mappedRequest, method);
+        requestMapper.put(requestDto, method);
     }
 
-    public static Method get(MappedRequest mappedRequest) {
-        return requestMapper.get(mappedRequest);
+    public static Method get(RequestDto requestDto) {
+        return requestMapper.get(requestDto);
     }
 
-    public Map<MappedRequest, Method> map() {
+    public Map<RequestDto, Method> map() {
         return requestMapper;
     }
 }
