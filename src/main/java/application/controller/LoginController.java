@@ -21,12 +21,12 @@ public class LoginController extends FrontController {
     @RequestMapping(path = "/users/login", method = HttpMethod.POST)
     public String login(HttpRequest request
             , HttpResponse response) {
-        Map<String, String> parameters = request.getHttpRequestBody().getBody();
-        log.debug("userId : {}", parameters.get("userId"));
-        log.debug("password : {}", parameters.get("password"));
+        log.debug("userId : {}", request.getParameter("userId"));
+        log.debug("password : {}", request.getParameter("password"));
 
-        String userId = parameters.get("userId");
-        String password = parameters.get("password");
+        String userId = request.getParameter("userId");
+        String password = request.getParameter("password");
+
         User user = Database.findUserById(userId);
         if (user.validUser(userId, password)) {
             SessionManager.createSession(user, response);
