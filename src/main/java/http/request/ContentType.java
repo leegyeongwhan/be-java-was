@@ -1,4 +1,4 @@
-package request;
+package http.request;
 
 import java.util.Arrays;
 
@@ -27,6 +27,10 @@ public enum ContentType {
         this.contentTypeHeader = headValue;
         this.extension = pattern;
         this.typePath = typePath;
+    }
+
+    public String getTypePath() {
+        return typePath;
     }
 
     public static ContentType of(String path) {

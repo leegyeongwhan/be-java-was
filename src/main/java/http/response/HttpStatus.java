@@ -1,11 +1,13 @@
-package response;
+package http.response;
 
 public enum HttpStatus {
 
     OK(200, "OK"),
+    FOUND(302, "FOUND"),
     BAD_REQUEST(400, "Bad Request"),
-    SC_NOT_FOUND(404, "Not Found"),
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+    NOT_FOUND(404, "Not Found"),
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+    METHOD_NOT_ALLOWED(405, "Method Not Allowed");
 
     private final int code;
     private final String message;
@@ -15,8 +17,8 @@ public enum HttpStatus {
         this.message = message;
     }
 
-    public int getCode() {
-        return code;
+    public String getCode() {
+        return String.valueOf(code);
     }
 
     public String getMessage() {

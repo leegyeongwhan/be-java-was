@@ -1,4 +1,4 @@
-package request;
+package http.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,5 +49,9 @@ public class HttpRequestBody {
 
     public Map<String, String> getBody() {
         return body;
+    }
+
+    public String getValue(String key) {
+        return this.body.get(key);
     }
 }
