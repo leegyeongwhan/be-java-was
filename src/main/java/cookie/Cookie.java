@@ -12,7 +12,7 @@ public class Cookie {
 
     private final String key;
     private final String value;
-    private Map<String, String> cookies = new HashMap<>();
+    private final Map<String, String> cookies = new HashMap<>();
 
     public Cookie(String key, String value) {
         this.key = key;
@@ -36,17 +36,5 @@ public class Cookie {
         return this.cookies.entrySet().stream()
                 .map(key -> key.getKey() + EQUAL + key.getValue())
                 .collect(Collectors.joining(SEMICOLON + BLANK));
-    }
-
-    public String getSessionId() {
-        return cookies.get(SESSION_ID);
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getValue() {
-        return value;
     }
 }
