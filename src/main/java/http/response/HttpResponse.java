@@ -89,12 +89,8 @@ public class HttpResponse {
 //            if (this.body != null) {
 //                dos.write(this.body, 0, body.length);
 //            }
-            //    if (hasResponseBody()) {
-            //modelAndView.getRequest().getTypeDirectory() + modelAndView.getViewPath()
             byte[] body = Files.readAllBytes(new File(contentType.getTypeDirectory() + modelAndView.getView()).toPath());
             responseBody(body);
-            //    }
-            dos.flush();
         } catch (IOException e) {
             e.getMessage();
         }
@@ -165,8 +161,9 @@ public class HttpResponse {
     }
 
     public void addCookie(String sid, String session) {
-        Cookie mySessionCookie = new Cookie(sid, session);
-        addSessionCookie(mySessionCookie);
+        //Todo 쿠키는 클라이언트 브라우저가
+        addHeader(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
+        addHeader("Set-cookie", sid + "=" + session);
     }
 
     public HttpResponse setContentType(ContentType contentType) {
