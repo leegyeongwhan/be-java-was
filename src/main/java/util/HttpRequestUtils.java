@@ -1,5 +1,8 @@
 package util;
 
+import http.request.ContentType;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,5 +17,14 @@ public class HttpRequestUtils {
             queryParams.put(param, value);
         }
         return queryParams;
+    }
+
+    public static ContentType findContent(String view) {
+        for (ContentType contentType : ContentType.values()) {
+            if (view.endsWith(".html") && contentType == ContentType.HTML) {
+                return contentType;
+            }
+        }
+        throw new IllegalArgumentException("Contents-Type이 존재하지 않습니다.");
     }
 }
