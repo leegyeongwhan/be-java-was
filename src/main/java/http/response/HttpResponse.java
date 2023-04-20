@@ -6,6 +6,8 @@ import http.request.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import view.ModelAndView;
+import view.templateengine.MustacheTemplateEngine;
+import view.templateengine.TemplateEngine;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -27,6 +29,7 @@ public class HttpResponse {
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
+        this.modelAndView = new ModelAndView();
         this.httpResponseHeader = new HttpResponseHeader();
     }
 
@@ -55,29 +58,8 @@ public class HttpResponse {
         return this;
     }
 
-    private void response(byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.writeBytes("\r\n");
-            dos.flush();
-        } catch (IOException e) {
-        }
-    }
-
-
     public void addSessionCookie(Cookie mySessionCookie) {
         httpResponseHeader.addMySessionCookie(mySessionCookie);
-    }
-
-    public void addCookieHeader() {
-        if (this.httpResponseHeader.isEmptyCookie()) {
-            return;
-        }
-        String parseCookie = this.httpResponseHeader.parseCookie();
-        this.httpResponseHeader.addCookie(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
-        addHeader("Set-Cookie", parseCookie);
-        log.debug("addCookieHeader : {}", parseCookie);
-        log.debug("httpResponseHeader : {}", httpResponseHeader);
     }
 
     //200
@@ -87,17 +69,12 @@ public class HttpResponse {
             dos.writeBytes(responseReadHeaderLine());
             //TODO 동적 웹페이지
             byte[] body = Files.readAllBytes(new File(contentType.getTypeDirectory() + modelAndView.getView()).toPath());
-            responseBody(body);
+            TemplateEngine templateEngine = new MustacheTemplateEngine();
+            byte[] compile = templateEngine.compile(body, modelAndView);
+            responseBody(compile);
         } catch (IOException e) {
             e.getMessage();
         }
-
-//        responseReadStatusLine();
-//        responseReadHeaderLine();
-//        if (hasResponseBody()) {
-//            byte[] body = Files.readAllBytes(new File(view.getRequest().getTypeDirectory() + view.getViewPath()).toPath());
-//            responseBody(body);
-//        }
     }
 
     private void response(DataOutputStream dos, byte[] body) {
@@ -106,10 +83,6 @@ public class HttpResponse {
             dos.flush();
         } catch (IOException e) {
         }
-    }
-
-    private boolean hasResponseBody() {
-        return httpResponseHeader.getContentLength();
     }
 
     private String responseReadHeaderLine() throws IOException {
@@ -129,11 +102,6 @@ public class HttpResponse {
 
     public HttpResponse setStatus(HttpStatus status) {
         this.httpStatus = status;
-        return this;
-    }
-
-    public HttpResponse setView(String view) {
-        this.modelAndView = new ModelAndView(view);
         return this;
     }
 
@@ -160,6 +128,11 @@ public class HttpResponse {
 
     public HttpResponse setContentType(ContentType contentType) {
         this.contentType = contentType;
+        return this;
+    }
+
+    public HttpResponse setView(String view) {
+        modelAndView.setView(view);
         return this;
     }
 
