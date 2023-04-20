@@ -35,7 +35,8 @@ public class HttpRequestUtils {
 
         if (matcher.find()) {
             String sessionId = matcher.group();
-            return sessionId; // "sid=1234;"
+            sessionId = sessionId.replace("sid=", ""); // "sid=1234;"
+            return sessionId.substring(0, sessionId.length() - 1);
         }
         return "";
     }
