@@ -44,4 +44,9 @@ public class UserController extends FrontController {
     public String userForm(HttpRequest request, HttpResponse response) {
         return "/user/form.html";
     }
+
+    @RequestMapping(path = "/user/list", method = HttpMethod.GET)
+    public String userList(HttpRequest request, HttpResponse response) {
+        return "/user/list.html";
+    }
 }
