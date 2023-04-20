@@ -3,6 +3,8 @@ package application.controller;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
 import http.response.HttpResponse;
+import session.SessionManager;
+import util.HttpRequestUtils;
 import webserver.annotation.Controller;
 import webserver.annotation.RequestMapping;
 import application.db.Database;
@@ -13,7 +15,9 @@ import util.HttpMethod;
 import view.ModelAndView;
 import webserver.RequestHandler;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class UserController extends FrontController {
@@ -47,6 +51,16 @@ public class UserController extends FrontController {
 
     @RequestMapping(path = "/user/list", method = HttpMethod.GET)
     public String userList(HttpRequest request, HttpResponse response) {
+        Optional<String> cookie = request.getCookie();
+        if (cookie.isEmpty()) {
+            return "redirect:/user/login.html";
+        }
+        String sessionId = HttpRequestUtils.parseSessionId(cookie.orElseThrow());
+        User user = SessionManager.getAttribute(sessionId);
+        if (user != null) {
+            Collection<User> userList = Database.findAll();
+            response.setModelAttribute("userList", userList);
+        }
         return "/user/list.html";
     }
 }
