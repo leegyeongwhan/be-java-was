@@ -8,7 +8,7 @@ import webserver.RequestHandler;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.Optional;
 
 public class HttpRequest {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -81,5 +81,10 @@ public class HttpRequest {
 
     public String getParameter(String key) {
         return httpRequestBody.getValue(key);
+    }
+
+    public Optional<String> getCookie() {
+        return httpRequestHeader.getCookie();
+
     }
 }
