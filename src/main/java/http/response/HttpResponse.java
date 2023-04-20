@@ -1,11 +1,15 @@
 package http.response;
 
 import cookie.Cookie;
+import http.request.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestUtils;
+import view.ModelAndView;
 import view.MyView;
 
 import java.io.*;
+import java.nio.file.Files;
 
 public class HttpResponse {
     private static final String COOKIE_NAME_PATH = "Path";
@@ -17,8 +21,9 @@ public class HttpResponse {
     //TODO 사용해보자.
     private HttpStatus httpStatus;
     private String version;
-    private MyView view;
+    private ModelAndView modelAndView;
     private HttpResponseHeader httpResponseHeader;
+    private ContentType contentType;
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
@@ -84,6 +89,11 @@ public class HttpResponse {
 //            if (this.body != null) {
 //                dos.write(this.body, 0, body.length);
 //            }
+            //    if (hasResponseBody()) {
+            //modelAndView.getRequest().getTypeDirectory() + modelAndView.getViewPath()
+            byte[] body = Files.readAllBytes(new File(contentType.getTypeDirectory() + modelAndView.getView()).toPath());
+            responseBody(body);
+            //    }
             dos.flush();
         } catch (IOException e) {
             e.getMessage();
@@ -134,13 +144,33 @@ public class HttpResponse {
         return this;
     }
 
-    public HttpResponse setView(MyView view) {
-        this.view = view;
+    public HttpResponse setView(String view) {
+        this.modelAndView = new ModelAndView(view);
         return this;
     }
 
     public HttpResponse addHeader(String key, String value) {
         this.httpResponseHeader.put(key, value);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "HttpResponse{" +
+                "httpStatus=" + httpStatus +
+                ", version='" + version + '\'' +
+                ", view=" + modelAndView +
+                ", httpResponseHeader=" + httpResponseHeader +
+                '}';
+    }
+
+    public void addCookie(String sid, String session) {
+        Cookie mySessionCookie = new Cookie(sid, session);
+        addSessionCookie(mySessionCookie);
+    }
+
+    public HttpResponse setContentType(ContentType contentType) {
+        this.contentType = contentType;
         return this;
     }
 }
