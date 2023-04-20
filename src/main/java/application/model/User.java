@@ -47,7 +47,7 @@ public class User {
     }
 
 
-    public boolean validUser(String userId, String password) {
+    public boolean valid(String userId, String password) {
         if (this.userId.equals(userId) && this.password.equals(password)) {
             return true;
         }
