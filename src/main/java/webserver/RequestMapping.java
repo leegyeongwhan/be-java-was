@@ -17,6 +17,7 @@ public class RequestMapping {
         controllerMap.put("/user/list.html", new LoginController());
         controllerMap.put("/users/create", new UserController());
         controllerMap.put("/users/login", new LoginController());
+        controllerMap.put("/users/list", new UserController());
     }
 
     public Controller mapping(String url) {
