@@ -1,6 +1,6 @@
 package application.controller;
 
-import view.MyView;
+import view.ViewResolver;
 import webserver.RequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import http.dto.RequestDto;
 import webserver.RequestHandler;
 import webserver.RequestMapping;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -21,10 +20,8 @@ public class DispatchServlet implements MyServlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        log.debug("request.getContentTypePath() : {}", request.getContentTypePath());
-
+        log.info("request.getUrl()", request.getUrl());
         Controller controller = requestMapping.mapping(request.getUrl());
-        log.debug("controller : {}", controller);
 
         if (controller instanceof DefaultController) {
             DefaultController defaultController = (DefaultController) controller;
@@ -34,19 +31,14 @@ public class DispatchServlet implements MyServlet {
 
         //TODO 컨트롤러의 상위 단인 controller를 통해
         try {
-            log.debug("request.getMethod(): {}", request.getMethod());
-            RequestDto requestDto = new RequestDto(request.getMethod(), request.getUrl());
-            log.debug("mappedRequest: {}", requestDto);
+            RequestDto requestDto = new RequestDto(request.getMethod(), request.getUrl().replace(".html", ""));
+            log.info("controller", controller);
             Method controllerMethod = RequestMapper.get(requestDto);
-            log.debug("controllerMethod: {}", controllerMethod);
-            //     String view = (String) controllerMethod.invoke(controller);
-            String view = (String) controllerMethod.invoke(controller, request, response);
-            System.out.println(view);
-            MyView myView = new MyView(view, request);
-            log.debug("view: {}", view);
-            myView.viewResolver(request, response);
+            String path = (String) controllerMethod.invoke(controller, request, response);
+            log.debug("view: {}", path);
+            ViewResolver.run(path, response);
 
-        } catch (InvocationTargetException | IllegalAccessException | IOException ex) {
+        } catch (InvocationTargetException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
     }
