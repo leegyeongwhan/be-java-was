@@ -26,9 +26,6 @@ public class UserController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
     private final Database database = new Database();
 
-    public ModelAndView process(Map<String, String> parameters) {
-        return new ModelAndView(REDIRECT + INDEX_HTML);
-    }
 
     @RequestMapping(path = "/users/create", method = HttpMethod.POST)
     public String createUser(HttpRequest request, HttpResponse response) {
@@ -49,17 +46,19 @@ public class UserController extends FrontController {
         return "/user/form.html";
     }
 
-    @RequestMapping(path = "/user/list", method = HttpMethod.GET)
+    @RequestMapping(path = "/users/list", method = HttpMethod.GET)
     public String userList(HttpRequest request, HttpResponse response) {
         Optional<String> cookie = request.getCookie();
         if (cookie.isEmpty()) {
             return "redirect:/user/login.html";
         }
         String sessionId = HttpRequestUtils.parseSessionId(cookie.orElseThrow());
+        System.out.println(sessionId);
         User user = SessionManager.getAttribute(sessionId);
         if (user != null) {
             Collection<User> userList = Database.findAll();
-            response.setModelAttribute("userList", userList);
+            //model에 담아 view에서 출력하도록한다
+            response.setModelAttribute("users", userList);
         }
         return "/user/list.html";
     }
