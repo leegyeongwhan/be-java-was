@@ -71,4 +71,14 @@ public class HttpRequestStartLine {
     public Map<String, String> getRequestData() {
         return requestData;
     }
+
+    @Override
+    public String toString() {
+        return "HttpRequestStartLine{" +
+                "method=" + method +
+                ", url='" + url + '\'' +
+                ", version='" + version + '\'' +
+                ", requestData=" + requestData +
+                '}';
+    }
 }

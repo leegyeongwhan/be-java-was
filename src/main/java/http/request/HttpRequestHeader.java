@@ -27,14 +27,14 @@ public class HttpRequestHeader {
 
         while (!(line = br.readLine()).equals("")) {
             String[] tokens = line.split(" ");
-            log.debug(" HttpRequestHeader tokens : {}", Arrays.toString(tokens));
+          //  log.debug(" HttpRequestHeader tokens : {}", Arrays.toString(tokens));
 
             if (tokens[0].contains("Accept:")) {
-                log.debug("tokens[0] : {}", tokens[0]);
-                log.debug("tokens[1] : {}", tokens[1]);
-                log.debug("tokens[1].split()[0] : {}", tokens[1].split(",")[0]);
+//                log.debug("tokens[0] : {}", tokens[0]);
+//                log.debug("tokens[1] : {}", tokens[1]);
+//                log.debug("tokens[1].split()[0] : {}", tokens[1].split(",")[0]);
                 contentType = ContentType.of(tokens[1].split(",")[0]);
-                log.debug("contentType : {}", contentType);
+ //               log.debug("contentType : {}", contentType);
                 continue;
             }
 
@@ -51,7 +51,7 @@ public class HttpRequestHeader {
 
     public int getContentLength() {
         String contentLengthHeader = this.headerMap.get("Content-Length");
-        log.debug(" HttpRequestHeader contentLengthHeader : {}", contentLengthHeader);
+  //      log.debug(" HttpRequestHeader contentLengthHeader : {}", contentLengthHeader);
 
         if (contentLengthHeader != null) {
             return Integer.parseInt(contentLengthHeader);

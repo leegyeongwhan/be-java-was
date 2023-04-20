@@ -26,7 +26,7 @@ public class HttpRequestBody {
             return new HttpRequestBody(new HashMap<>());
         }
         Map<String, String> parsingQueryMap = ParsingQueryString(queryString);
-        log.debug(" HttpRequestBody contentLength : {}", contentLength);
+//        log.debug(" HttpRequestBody contentLength : {}", contentLength);
         return new HttpRequestBody(parsingQueryMap);
     }
 
@@ -37,7 +37,7 @@ public class HttpRequestBody {
     }
 
     public static Map<String, String> ParsingQueryString(String queryString) {
-        log.debug(" HttpRequestBody queryString : {}", queryString);
+//        log.debug(" HttpRequestBody queryString : {}", queryString);
         Map<String, String> body = new HashMap<>();
 
         Arrays.stream(URLDecoder.decode(queryString, StandardCharsets.UTF_8).split("\\&"))
@@ -53,5 +53,12 @@ public class HttpRequestBody {
 
     public String getValue(String key) {
         return this.body.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return "HttpRequestBody{" +
+                "body=" + body +
+                '}';
     }
 }
