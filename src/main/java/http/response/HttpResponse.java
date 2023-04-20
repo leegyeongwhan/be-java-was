@@ -1,15 +1,15 @@
 package http.response;
 
+import application.model.User;
 import cookie.Cookie;
 import http.request.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestUtils;
 import view.ModelAndView;
-import view.MyView;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Collection;
 
 public class HttpResponse {
     private static final String COOKIE_NAME_PATH = "Path";
@@ -85,10 +85,7 @@ public class HttpResponse {
         try {
             dos.writeBytes("HTTP/1.1 " + this.httpStatus.getCode() + this.httpStatus.getMessage() + " \r\n");
             dos.writeBytes(responseReadHeaderLine());
-            //Set-cookie: sid=f50ed4f1-c07c-4a6d-b2d6-9d25f2aec460; Path=/
-//            if (this.body != null) {
-//                dos.write(this.body, 0, body.length);
-//            }
+            //TODO 동적 웹페이지
             byte[] body = Files.readAllBytes(new File(contentType.getTypeDirectory() + modelAndView.getView()).toPath());
             responseBody(body);
         } catch (IOException e) {
@@ -123,11 +120,6 @@ public class HttpResponse {
 
         return headerString.append("\r\n").toString();
 
-//        for (Map.Entry<String, String> entry : httpResponseHeader.getHeaders().entrySet()) {
-//            dos.writeBytes(
-//                    entry.getKey() + ": " + entry.getValue() + System.lineSeparator());
-//        }
-//        return this;
     }
 
     public HttpResponse setHttpVersion(String version) {
@@ -169,5 +161,13 @@ public class HttpResponse {
     public HttpResponse setContentType(ContentType contentType) {
         this.contentType = contentType;
         return this;
+    }
+
+    public void setModelAttribute(String listName, Collection<User> list) {
+        modelAndView.setModelAttribute(listName, list);
+    }
+
+    public void setModelAttribute(String key, String value) {
+        modelAndView.setModelAttribute(key, value);
     }
 }
