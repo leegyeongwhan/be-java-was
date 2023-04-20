@@ -3,14 +3,13 @@ package session;
 import application.model.User;
 import cookie.Cookie;
 import http.response.HttpResponse;
-import javassist.compiler.ast.Member;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionManager {
-    private static final Map<String, Object> sessionStore = new ConcurrentHashMap<>();
+    private static final Map<String, User> sessionStore = new ConcurrentHashMap<>();
     public static final String SESSION_COOKIE_NAME = "sid";
 
     public static void createSession(User user, HttpResponse response) {
@@ -27,19 +26,19 @@ public class SessionManager {
         return sessionId;
     }
 
-    public Object getAttribute(final String name) {
-        return this.sessionStore.get(name);
+    public static User getAttribute(final String name) {
+        return sessionStore.get(name);
     }
 
-    public void setAttribute(final String name, Object value) {
-        this.sessionStore.put(name, value);
+    public void setAttribute(final String name, User value) {
+        sessionStore.put(name, value);
     }
 
     public void removeAttribute(final String name) {
-        this.sessionStore.remove(name);
+        sessionStore.remove(name);
     }
 
     public void invalidate() {
-        this.sessionStore.clear();
+        sessionStore.clear();
     }
 }
