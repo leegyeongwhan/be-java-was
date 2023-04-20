@@ -21,6 +21,12 @@ public class SessionManager {
         response.addSessionCookie(mySessionCookie);
     }
 
+    public static String createSession(User user) {
+        String sessionId = UUID.randomUUID().toString();
+        sessionStore.put(sessionId, user);
+        return sessionId;
+    }
+
     public Object getAttribute(final String name) {
         return this.sessionStore.get(name);
     }

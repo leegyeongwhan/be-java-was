@@ -12,8 +12,6 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import util.HttpMethod;
 
-import java.util.Map;
-
 @Controller
 public class LoginController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,9 +26,10 @@ public class LoginController extends FrontController {
         String password = request.getParameter("password");
 
         User user = Database.findUserById(userId);
-        if (user.validUser(userId, password)) {
-            SessionManager.createSession(user, response);
-            response.addCookieHeader();
+        if (user.valid(userId, password)) {
+            String sid = SessionManager.createSession(user);
+            response.addCookie("sid", sid);
+
             log.debug("user", user);
             return "redirect:/index.html";
         }
