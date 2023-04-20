@@ -17,8 +17,7 @@ public class LoginController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     @RequestMapping(path = "/users/login", method = HttpMethod.POST)
-    public String login(HttpRequest request
-            , HttpResponse response) {
+    public String login(HttpRequest request, HttpResponse response) {
         log.debug("userId : {}", request.getParameter("userId"));
         log.debug("password : {}", request.getParameter("password"));
 
@@ -27,9 +26,8 @@ public class LoginController extends FrontController {
 
         User user = Database.findUserById(userId);
         if (user.valid(userId, password)) {
-            String sid = SessionManager.createSession(user);
-            response.addCookie("sid", sid);
-
+            String session = SessionManager.createSession(user);
+            response.addCookie("sid", session);
             log.debug("user", user);
             return "redirect:/index.html";
         }
