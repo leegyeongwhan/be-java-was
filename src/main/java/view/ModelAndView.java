@@ -1,5 +1,8 @@
 package view;
 
+import application.model.User;
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,11 +23,22 @@ public class ModelAndView {
         return model;
     }
 
-    public void setView(String view) {
-        this.view = view;
+    public void addObject(String key, Object value) {
+        model.put(key, value);
     }
 
-    public void setModel(Map<String, Object> model) {
-        this.model = model;
+    public void setModelAttribute(String listName, Collection<User> list) {
+        int count = 0;
+        for (User user : list) {
+            addObject("user userId" + count, user.getUserId());
+            addObject("user password" + count, user.getPassword());
+            addObject("user name" + count, user.getName());
+            addObject("user email" + count, user.getEmail());
+            count++;
+        }
+    }
+
+    public void setModelAttribute(String key, String value) {
+        addObject(key, value);
     }
 }
