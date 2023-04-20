@@ -2,9 +2,10 @@ package util;
 
 import http.request.ContentType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpRequestUtils {
 
@@ -26,5 +27,16 @@ public class HttpRequestUtils {
             }
         }
         throw new IllegalArgumentException("Contents-Type이 존재하지 않습니다.");
+    }
+
+    public static String parseSessionId(String cookie) {
+        Pattern pattern = Pattern.compile("sid=[^;]*;");
+        Matcher matcher = pattern.matcher(cookie);
+
+        if (matcher.find()) {
+            String sessionId = matcher.group();
+            return sessionId; // "sid=1234;"
+        }
+        return "";
     }
 }
