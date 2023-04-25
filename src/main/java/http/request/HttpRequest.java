@@ -18,7 +18,6 @@ public class HttpRequest {
     private HttpRequestHeader httpRequestHeader;
     //body
     private HttpRequestBody httpRequestBody;
-    private Cookie cookie;
 
     //TODO 정적 팩토리 메서드(Static Factory Method)
     public static HttpRequest of(InputStream in) throws IOException {
@@ -75,7 +74,6 @@ public class HttpRequest {
                 "httpRequestStartLine=" + httpRequestStartLine +
                 ", httpRequestHeader=" + httpRequestHeader +
                 ", httpRequestBody=" + httpRequestBody +
-                ", cookie=" + cookie +
                 '}';
     }
 
@@ -85,6 +83,5 @@ public class HttpRequest {
 
     public Optional<String> getCookie() {
         return httpRequestHeader.getCookie();
-
     }
 }
