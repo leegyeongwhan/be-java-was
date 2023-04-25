@@ -21,7 +21,6 @@ public class MustacheTemplateEngine implements TemplateEngine {
 
         while (start != -1 && end != -1) {
 
-            // 각 user에 대한 html 구성
             StringBuilder userHtml = new StringBuilder();
             Collection<User> userCollection = (Collection<User>) modelAndView.getModel().get("users");
 
@@ -32,7 +31,6 @@ public class MustacheTemplateEngine implements TemplateEngine {
                 String name = user.getName();
                 String email = user.getEmail();
 
-
                 String userHtmlFragment = sb.substring(start + START_TAG.length(), end)
                         .replaceAll("\\{\\{user\\.getUserId\\}\\}", userId)
                         .replaceAll("\\{\\{user\\.getName\\}\\}", name)
@@ -42,9 +40,9 @@ public class MustacheTemplateEngine implements TemplateEngine {
                 userHtml.append(userHtmlFragment);
             }
 
+            //파싱한 문자를 시작지점부터 끝 테그까지 대체한다.
             String usersHtmlFragment = START_TAG + "users" + CLOSE_TAG
-                    + userHtml.toString()
-                    + END_TAG + "users" + CLOSE_TAG;
+                    + userHtml + END_TAG + "users" + CLOSE_TAG;
             sb.replace(start, end + END_TAG.length(), usersHtmlFragment);
 
             // 다음 반복문 시작 위치 찾기
