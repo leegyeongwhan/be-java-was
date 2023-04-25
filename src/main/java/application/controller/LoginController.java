@@ -12,6 +12,8 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import util.HttpMethod;
 
+import java.util.Optional;
+
 @Controller
 public class LoginController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,6 +30,7 @@ public class LoginController extends FrontController {
         if (user.valid(userId, password)) {
             String session = SessionManager.createSession(user);
             response.addCookie("sid", session);
+            response.setModelAttribute("users", user.getName());
             log.debug("user", user);
             return "redirect:/index.html";
         }
@@ -39,4 +42,13 @@ public class LoginController extends FrontController {
             , HttpResponse response) {
         return "/user/login.html";
     }
+
+    @RequestMapping(path = "/user/logout", method = HttpMethod.GET)
+    public String logout(HttpRequest request
+            , HttpResponse response) {
+        Optional<String> cookie = request.getCookie();
+        SessionManager.removeAttribute(cookie.orElseThrow());
+        return "redirect:/";
+    }
+
 }
