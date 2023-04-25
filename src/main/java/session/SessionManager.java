@@ -10,15 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionManager {
     private static final Map<String, User> sessionStore = new ConcurrentHashMap<>();
-    public static final String SESSION_COOKIE_NAME = "sid";
-
-    public static void createSession(User user, HttpResponse response) {
-        String sessionId = UUID.randomUUID().toString();
-        sessionStore.put(sessionId, user);
-
-        Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
-        response.addSessionCookie(mySessionCookie);
-    }
 
     public static String createSession(User user) {
         String sessionId = UUID.randomUUID().toString();
@@ -34,7 +25,7 @@ public class SessionManager {
         sessionStore.put(name, value);
     }
 
-    public void removeAttribute(final String name) {
+    public static void removeAttribute(final String name) {
         sessionStore.remove(name);
     }
 
