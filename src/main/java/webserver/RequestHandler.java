@@ -29,6 +29,7 @@ public class RequestHandler implements Runnable {
 
             //TODO HttpResponse로 out을 받는것 이 맞을까?
             HttpResponse httpResponse = new HttpResponse(out);
+           // HttpResponse httpResponse =   dispatchServlet.service(httpRequest);
             dispatchServlet.service(httpRequest, httpResponse);
         } catch (IOException e) {
             log.error(e.getMessage());

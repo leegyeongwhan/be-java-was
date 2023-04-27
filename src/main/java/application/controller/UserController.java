@@ -53,7 +53,6 @@ public class UserController extends FrontController {
             return "redirect:/user/login.html";
         }
         String sessionId = HttpRequestUtils.parseSessionId(cookie.orElseThrow());
-        System.out.println(sessionId);
         User user = SessionManager.getAttribute(sessionId);
         if (user != null) {
             Collection<User> userList = Database.findAll();
