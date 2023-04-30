@@ -13,8 +13,10 @@ public class RequestMapping {
 
     public RequestMapping() {
         controllerMap.put("/", new HomeController());
+        controllerMap.put("/index.html", new HomeController());
         controllerMap.put("/user/form.html", new UserController());
         controllerMap.put("/user/list.html", new LoginController());
+        controllerMap.put("/user/login.html", new LoginController());
         controllerMap.put("/users/create", new UserController());
         controllerMap.put("/users/login", new LoginController());
         controllerMap.put("/users/list", new UserController());
