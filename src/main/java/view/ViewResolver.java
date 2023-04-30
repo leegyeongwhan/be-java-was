@@ -16,21 +16,28 @@ public class ViewResolver {
         response.setHttpVersion("HTTP/1.1");
 
         if (viewPath.contains("redirect:")) {
-            String viewName = viewPath.replace("redirect:", "");
-
-            response.setStatus(HttpStatus.FOUND)
-                    .addHeader("Location", viewName)
-                    .setView(viewName);
-
-            response.render();
+            redirect(viewPath, response);
             return;
         }
+         forward(viewPath, response);
+    }
 
+    private static void forward(String viewPath, HttpResponse response) {
         ContentType contentType = HttpRequestUtils.findContent(viewPath);
         response.setStatus(HttpStatus.OK)
                 .addHeader("Content-Type", contentType.getContentTypeHeader())
                 .setContentType(contentType)
                 .setView(viewPath);
+
+        response.render();
+    }
+
+    private static void redirect(String viewPath, HttpResponse response) {
+        String viewName = viewPath.replace("redirect:", "");
+
+        response.setStatus(HttpStatus.FOUND)
+                .addHeader("Location", viewName)
+                .setView(viewName);
 
         response.render();
     }
