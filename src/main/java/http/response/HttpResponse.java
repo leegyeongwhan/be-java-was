@@ -67,14 +67,21 @@ public class HttpResponse {
         try {
             dos.writeBytes("HTTP/1.1 " + this.httpStatus.getCode() + this.httpStatus.getMessage() + " \r\n");
             dos.writeBytes(responseReadHeaderLine());
-            //TODO 동적 웹페이지
-            byte[] body = Files.readAllBytes(new File(contentType.getTypeDirectory() + modelAndView.getView()).toPath());
-            TemplateEngine templateEngine = new MustacheTemplateEngine();
-            byte[] compile = templateEngine.compile(body, modelAndView);
-            responseBody(compile);
+            //리다이렉트하는 경우 바디가 없다.
+            if (hasBody()) {
+                byte[] body = Files.readAllBytes(new File(contentType.getTypeDirectory() + modelAndView.getView()).toPath());
+                //TODO 동적 웹페이지
+                TemplateEngine templateEngine = new MustacheTemplateEngine();
+                byte[] compile = templateEngine.compile(body, modelAndView);
+                responseBody(compile);
+            }
         } catch (IOException e) {
             e.getMessage();
         }
+    }
+
+    private boolean hasBody() {
+        return contentType != null ? true : false;
     }
 
     private void response(DataOutputStream dos, byte[] body) {
