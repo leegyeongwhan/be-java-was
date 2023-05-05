@@ -22,12 +22,9 @@ public class RequestMapper {
     public static void run() {
         Reflections reflections = new Reflections(DEFAULT_CONTROLLER_DIRECTORY);
         Set<Class<?>> controllerAnnotatedClasses = reflections.getTypesAnnotatedWith(Controller.class);
-        log.debug("controllerAnnotatedClasses = {}", controllerAnnotatedClasses); //usercontroller
 
         for (Class<?> aClass : controllerAnnotatedClasses) {
             Controller controller = aClass.getAnnotation(Controller.class);
-            log.debug("controller = {}", aClass); //usercontroller
-            log.debug("controllerAnnotatedClasses = {}", controllerAnnotatedClasses); //usercontroller
         }
 
         controllerAnnotatedClasses.stream()
@@ -38,17 +35,14 @@ public class RequestMapper {
     //@RequestMapping이붙은 메서드 탐색
     private static Function<Class<?>, Set<Method>> scanRequestMappingAnnotatedMethods() {
         return aClass -> {
-            log.debug("scanRequestMappingAnnotatedMethods = {}", aClass.getName()); //usercontroller
             Set<Method> methodsAnnotatedWith = new Reflections(aClass.getPackage().getName(), new MethodAnnotationsScanner())//
                     .getMethodsAnnotatedWith(RequestMapping.class);
-            log.debug("methodsAnnotatedWith = {}", methodsAnnotatedWith); //usercontroller
             return methodsAnnotatedWith;
         };
     }
 
     private static Consumer<Set<Method>> applyAnnotatedMethods() {
         return classes -> {
-            log.debug("applyAnnotatedMethods = {}", classes); //usercontroller
             classes.forEach(addAnnotatedMethodToRequestMapper());
         };
     }
