@@ -27,7 +27,7 @@ public class HttpRequestStartLine {
     public static HttpRequestStartLine of(BufferedReader br) throws IOException {
         //request 에서 startLine 분리한다
         String line = br.readLine();
-        while (br.equals("") || br == null) {
+        while (line.equals("") || line == null) {
             //TODO 예외처리 해주자
             break;
         }
