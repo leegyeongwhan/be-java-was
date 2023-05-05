@@ -1,6 +1,5 @@
 package http.request;
 
-import cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpMethod;
@@ -8,7 +7,6 @@ import webserver.RequestHandler;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 public class HttpRequest {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -81,7 +79,12 @@ public class HttpRequest {
         return httpRequestBody.getValue(key);
     }
 
-    public Optional<String> getCookie() {
+    public String getCookie() {
         return httpRequestHeader.getCookie();
+    }
+
+    public String getSession() {
+        String cookie = httpRequestHeader.getCookie();
+        return cookie;
     }
 }
