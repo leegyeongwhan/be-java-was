@@ -8,7 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static com.google.common.net.HttpHeaders.COOKIE;
 
 public class HttpRequestHeader {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -41,6 +42,9 @@ public class HttpRequestHeader {
             //TODO Header 부분을 분리한다.
             if (line.contains(": ")) {
                 String headerName = line.split(": ")[0].trim(); // Header 이름을 trim() 메소드를 사용하여 양쪽 공백 제거
+                if(headerName.equals("Cookie")){
+                    log.debug("headers",headerName);
+                }
                 String headerValue = line.split(": ")[1].trim(); // Header 값을 trim() 메소드를 사용하여 양쪽 공백 제거
                 header.put(headerName, headerValue);
             }
@@ -67,8 +71,8 @@ public class HttpRequestHeader {
         return contentType;
     }
 
-    public Optional<String> getCookie() {
-        return Optional.ofNullable(headerMap.get("Cookie"));
+    public String getCookie() {
+        return headerMap.get(COOKIE);
     }
 }
 
