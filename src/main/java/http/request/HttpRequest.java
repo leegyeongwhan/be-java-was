@@ -87,4 +87,8 @@ public class HttpRequest {
         String cookie = httpRequestHeader.getCookie();
         return cookie;
     }
+
+    public String getRequestUri() {
+        return httpRequestStartLine.getUrl();
+    }
 }
