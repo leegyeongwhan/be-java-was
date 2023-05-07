@@ -19,8 +19,14 @@ public class DispatchServlet implements MyServlet {
     private static final RequestMapping requestMapping = new RequestMapping();
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpRequest request, HttpResponse response){
         log.info("request.getUrl()", request.getUrl());
+
+//        if (!isLoggedIn(request)) { // 로그인이 필요한 페이지에 접근했는데 로그인되어 있지 않을 경우
+//            response.sendRedirect("/login.html"); // 로그인 페이지로 리다이렉트
+//            return;
+//        }
+
         Controller controller = requestMapping.mapping(request.getUrl());
 
         if (controller instanceof DefaultController) {
@@ -32,10 +38,8 @@ public class DispatchServlet implements MyServlet {
         //TODO 컨트롤러의 상위 단인 controller를 통해
         try {
             RequestDto requestDto = new RequestDto(request.getMethod(), request.getUrl().replace(".html", ""));
-            log.info("controller", controller);
             Method controllerMethod = RequestMapper.get(requestDto);
             String path = (String) controllerMethod.invoke(controller, request, response);
-            log.debug("view: {}", path);
             ViewResolver.run(path, response);
 
         } catch (InvocationTargetException | IllegalAccessException ex) {
