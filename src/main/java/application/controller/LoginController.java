@@ -20,8 +20,6 @@ public class LoginController extends FrontController {
 
     @RequestMapping(path = "/users/login", method = HttpMethod.POST)
     public String login(HttpRequest request, HttpResponse response) {
-        log.debug("userId : {}", request.getParameter("userId"));
-        log.debug("password : {}", request.getParameter("password"));
 
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
@@ -29,10 +27,12 @@ public class LoginController extends FrontController {
         User user = Database.findUserById(userId);
         if (user.valid(userId, password)) {
             String session = SessionManager.createSession(user);
+            log.debug("session", session);
             response.addCookie("sid", session);
-            response.setModelAttribute("users", user.getName());
-            log.debug("user", user);
-            return "redirect:/index.html";
+            response.setModelAttribute("loginId", user.getName());
+            log.debug("response", response);
+            log.debug("로그인된 회원", user);
+            return "redirect:/";
         }
         return "/user/login_failed.html";
     }
@@ -46,8 +46,8 @@ public class LoginController extends FrontController {
     @RequestMapping(path = "/user/logout", method = HttpMethod.GET)
     public String logout(HttpRequest request
             , HttpResponse response) {
-        Optional<String> cookie = request.getCookie();
-        SessionManager.removeAttribute(cookie.orElseThrow());
+        String cookie = request.getCookie();
+        SessionManager.removeAttribute(cookie);
         return "redirect:/";
     }
 
