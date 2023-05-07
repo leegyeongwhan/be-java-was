@@ -37,4 +37,12 @@ public class Cookie {
                 .map(key -> key.getKey() + EQUAL + key.getValue())
                 .collect(Collectors.joining(SEMICOLON + BLANK));
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
