@@ -19,25 +19,34 @@ import java.util.Optional;
 public class HomeController extends FrontController {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-//    public ModelAndView doGet(HttpRequest request, HttpResponse response) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setView(new MyView("/index"));
-//        return new ModelAndView();
-//    }
-
     @RequestMapping(path = "/", method = HttpMethod.GET)
     public String home(HttpRequest request, HttpResponse response) {
-        Optional<String> cookie = request.getCookie();
-        String session = cookie.orElseThrow();
-        //쿠키가 등록된 회원
-        if (!session.isEmpty()) {
-            String sessionId = HttpRequestUtils.parseSessionId(cookie.orElseThrow());
+        //TODO NO 쿠키일때 생각해보자.
+        String sessionId = HttpRequestUtils.parseSessionId(request.getCookie());
+        log.debug("home request",request);
+
+        //로그인한 상태의 회원일 경우 index.html에 아이디를 표시한다.
+        if (SessionManager.getAttribute(sessionId) != null) {
             User user = SessionManager.getAttribute(sessionId);
 
             //로그인한 회원인 경우
-            response.setModelAttribute("loginId", user.getUserId());
+            response.setModelAttribute("loginId", user.getName());
         }
-        response.setModelAttribute("loginId", "비회원");
+        return "/index.html";
+    }
+
+    @RequestMapping(path = "/index", method = HttpMethod.GET)
+    public String index(HttpRequest request, HttpResponse response) {
+        //TODO NO 쿠키일때 생각해보자.
+        log.debug("home request",request);
+        String sessionId = HttpRequestUtils.parseSessionId(request.getCookie());
+        //로그인한 상태의 회원일 경우 index.html에 아이디를 표시한다.
+        if (SessionManager.getAttribute(sessionId) != null) {
+            User user = SessionManager.getAttribute(sessionId);
+
+            //로그인한 회원인 경우
+            response.setModelAttribute("loginId", user.getName());
+        }
         return "/index.html";
     }
 }
