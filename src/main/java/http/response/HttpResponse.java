@@ -15,7 +15,7 @@ import java.util.Collection;
 
 public class HttpResponse {
     private static final String COOKIE_NAME_PATH = "Path";
-    private static final String COOKIE_VALUE_PATH = "/";
+    private static final String COOKIE_VALUE_PATH = "=/";
 
     //ToDO  응답 코드와 헤더를 먼저 설정. 이후에는 응답 바디를 만든다.
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
@@ -58,10 +58,6 @@ public class HttpResponse {
         return this;
     }
 
-    public void addSessionCookie(Cookie mySessionCookie) {
-        httpResponseHeader.addMySessionCookie(mySessionCookie);
-    }
-
     //200
     public void render() {
         try {
@@ -74,6 +70,8 @@ public class HttpResponse {
                 TemplateEngine templateEngine = new MustacheTemplateEngine();
                 byte[] compile = templateEngine.compile(body, modelAndView);
                 responseBody(compile);
+            } else {
+                dos.flush();
             }
         } catch (IOException e) {
             e.getMessage();
@@ -117,20 +115,9 @@ public class HttpResponse {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "HttpResponse{" +
-                "httpStatus=" + httpStatus +
-                ", version='" + version + '\'' +
-                ", view=" + modelAndView +
-                ", httpResponseHeader=" + httpResponseHeader +
-                '}';
-    }
-
     public void addCookie(String sid, String session) {
         //Todo 쿠키는 클라이언트 브라우저가
-        addHeader(COOKIE_NAME_PATH, COOKIE_VALUE_PATH);
-        addHeader("Set-cookie", sid + "=" + session);
+        addHeader("Set-Cookie", sid + "=" + session + "; " + " Domain=localhost; " + COOKIE_NAME_PATH + COOKIE_VALUE_PATH);
     }
 
     public HttpResponse setContentType(ContentType contentType) {
@@ -150,4 +137,16 @@ public class HttpResponse {
     public void setModelAttribute(String key, String value) {
         modelAndView.setModelAttribute(key, value);
     }
+
+    @Override
+    public String toString() {
+        return "HttpResponse{" +
+                "httpStatus=" + httpStatus +
+                ", version='" + version + '\'' +
+                ", view=" + modelAndView +
+                ", httpResponseHeader=" + httpResponseHeader +
+                '}';
+    }
+
+
 }
