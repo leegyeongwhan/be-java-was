@@ -48,11 +48,11 @@ public class UserController extends FrontController {
 
     @RequestMapping(path = "/users/list", method = HttpMethod.GET)
     public String userList(HttpRequest request, HttpResponse response) {
-        Optional<String> cookie = request.getCookie();
+        String cookie = request.getCookie();
         if (cookie.isEmpty()) {
             return "redirect:/user/login.html";
         }
-        String sessionId = HttpRequestUtils.parseSessionId(cookie.orElseThrow());
+        String sessionId = HttpRequestUtils.parseSessionId(cookie);
         User user = SessionManager.getAttribute(sessionId);
         if (user != null) {
             Collection<User> userList = Database.findAll();
